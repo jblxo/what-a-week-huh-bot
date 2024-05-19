@@ -65,7 +65,7 @@ schedule.every().wednesday.at("10:00",
 def polling_thread():
   try:
     bot.set_update_listener(update_listener)
-    bot.infinity_polling(non_stop=True, timeout=10, long_polling_timeout=5)
+    bot.infinity_polling(timeout=10, long_polling_timeout=5)
   except Exception as e:
     print(f"Whoops, there has been an error: {e}")
     time.sleep(5)
