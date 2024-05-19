@@ -39,8 +39,11 @@ def send_photo_message_test(message):
 @bot.message_handler(commands=['addchat'])
 def add_chat(message):
   chat_id = message.chat.id
-  bot.send_message(chat_id, "Adding chat to schedule")
-  chat_ids.append(message.chat.id)
+  if chat_id not in chat_ids:
+    bot.send_message(chat_id, "Adding chat to schedule")
+    chat_ids.append(message.chat.id)
+  else:
+    bot.send_message(chat_id, "Chat is already known. Skipping.")
 
 
 # Function to get all scheduled chat ids
