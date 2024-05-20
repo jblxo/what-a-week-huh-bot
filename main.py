@@ -5,7 +5,6 @@ import threading
 import schedule
 import telebot
 from PIL import Image
-import soundfile as sf
 
 TOKEN = os.environ['TELEGRAM_BOT_TOKEN']
 bot = telebot.TeleBot(TOKEN)
@@ -33,8 +32,7 @@ def get_audio(audio):
   if path is None:
     return None
 
-  audio, _ = sf.read(path)
-  return audio
+  return path
 
 
 def send_audio(chat_id, audio):
