@@ -1,5 +1,6 @@
 {pkgs}: {
   deps = [
+    pkgs.libsndfile
     pkgs.psmisc
     pkgs.zlib
     pkgs.openjpeg

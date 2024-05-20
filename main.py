@@ -5,14 +5,14 @@ import threading
 import schedule
 import telebot
 from PIL import Image
+import soundfile as sf
 
 TOKEN = os.environ['TELEGRAM_BOT_TOKEN']
 bot = telebot.TeleBot(TOKEN)
 
-images = {
-  "what_a_week_huh": "what_a_week_huh.jpg",
-  "adam": "adam.jpeg"
-}
+images = {"what_a_week_huh": "what_a_week_huh.jpg", "adam": "adam.jpeg"}
+
+sounds = {"cry_baby": "cry_baby.wav"}
 
 chat_ids = []
 
@@ -22,17 +22,38 @@ def get_photo(image):
 
   if path is None:
     return None
-  
+
   photo = Image.open(path)
   return photo
 
+
+def get_audio(audio):
+  path = sounds[audio]
+
+  if path is None:
+    return None
+
+  audio, _ = sf.read(path)
+  return audio
+
+
+def send_audio(chat_id, audio):
+  audio = get_audio(audio)
+
+  if audio is None:
+    return
+
+  bot.send_audio(chat_id, audio)
+
+
 def send_photo(chat_id, image):
   photo = get_photo(image)
-  
+
   if photo is None:
     return
-    
+
   bot.send_photo(chat_id, photo)
+
 
 # Function to send a photo message to all chats
 def send_photo_message_to_all():
@@ -67,6 +88,7 @@ def get_chats(message):
   chat_id = message.chat.id
   bot.send_message(chat_id, f"Chat ids: {chat_ids}")
 
+
 # When you need to show Adam their place
 @bot.message_handler(commands=["adamejdidoprdele"])
 def adam(message):
@@ -74,12 +96,21 @@ def adam(message):
   bot.send_message(chat_id, f"Adam!!!")
   send_photo(chat_id, "adam")
 
+
 def update_listener(messages):
   for message in messages:
     chat_id = message.chat.id
     if chat_id not in chat_ids:
       print(f"Discovered new chat! Adding chat {chat_id} to schedule.")
       chat_ids.append(chat_id)
+
+
+# Do not cry sweet little child
+@bot.message_handler(commands=["crybaby"])
+def cry_baby(message):
+  chat_id = message.chat.id
+  bot.send_message(chat_id, "👶")
+  send_audio(chat_id, "cry_baby")
 
 
 schedule.every().wednesday.at("10:00",
