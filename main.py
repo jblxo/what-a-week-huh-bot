@@ -7,32 +7,47 @@ import telebot
 from PIL import Image
 
 TOKEN = os.environ['TELEGRAM_BOT_TOKEN']
-IMAGE = "what_a_week_huh.jpg"
 bot = telebot.TeleBot(TOKEN)
+
+images = {
+  "what_a_week_huh": "what_a_week_huh.jpg",
+  "adam": "adam.jpeg"
+}
 
 chat_ids = []
 
 
-def get_photo():
-  photo = Image.open(IMAGE)
+def get_photo(image):
+  path = images[image]
+
+  if path is None:
+    return None
+  
+  photo = Image.open(path)
   return photo
 
+def send_photo(chat_id, image):
+  photo = get_photo(image)
+  
+  if photo is None:
+    return
+    
+  bot.send_photo(chat_id, photo)
 
 # Function to send a photo message to all chats
 def send_photo_message_to_all():
   print("It's wednesday my dudes! Sending the photo...")
-  photo = get_photo()
+  photo = get_photo("what_a_week_huh")
   for chat_id in chat_ids:
     print(f"Sending photo to chat ID: {chat_id}")
-    bot.send_photo(chat_id, photo)
+    send_photo(chat_id, photo)
 
 
 # Function to handle the testing command and send the photo
 @bot.message_handler(commands=['sendphoto'])
 def send_photo_message_test(message):
   chat_id = message.chat.id
-  photo = get_photo()
-  bot.send_photo(chat_id, photo)
+  send_photo(chat_id, "what_a_week_huh")
 
 
 # Function to manually trigger loading all joined chats ids
@@ -52,6 +67,12 @@ def get_chats(message):
   chat_id = message.chat.id
   bot.send_message(chat_id, f"Chat ids: {chat_ids}")
 
+# When you need to show Adam their place
+@bot.message_handler(commands=["adamejdidoprdele"])
+def adam(message):
+  chat_id = message.chat.id
+  bot.send_message(chat_id, f"Adam!!!")
+  send_photo(chat_id, "adam")
 
 def update_listener(messages):
   for message in messages:
