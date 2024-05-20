@@ -32,7 +32,12 @@ def get_audio(audio):
   if path is None:
     return None
 
-  return path
+  with open(path, 'rb') as audio:
+    files = {
+        'audio': audio.read(),
+    }
+
+  return files['audio']
 
 
 def send_audio(chat_id, audio):
@@ -41,7 +46,7 @@ def send_audio(chat_id, audio):
   if audio is None:
     return
 
-  bot.send_audio(chat_id, audio)
+  bot.send_audio(chat_id=chat_id, audio=audio)
 
 
 def send_photo(chat_id, image):
