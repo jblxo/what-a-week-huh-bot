@@ -11,9 +11,9 @@ bot = telebot.TeleBot(TOKEN)
 
 images = {"what_a_week_huh": "what_a_week_huh.jpg", "adam": "adam.jpeg"}
 
-sounds = {"cry_baby": "cry_baby.wav"}
+sounds = {"cry_baby": "cry_baby.wav", "zase_prace": "zase_prace.wav"}
 
-chat_ids = []
+chat_ids = set()
 
 
 def get_photo(image):
@@ -80,7 +80,7 @@ def add_chat(message):
   chat_id = message.chat.id
   if chat_id not in chat_ids:
     bot.send_message(chat_id, "Adding chat to schedule")
-    chat_ids.append(message.chat.id)
+    chat_ids.add(message.chat.id)
   else:
     bot.send_message(chat_id, "Chat is already known. Skipping.")
 
@@ -105,7 +105,7 @@ def update_listener(messages):
     chat_id = message.chat.id
     if chat_id not in chat_ids:
       print(f"Discovered new chat! Adding chat {chat_id} to schedule.")
-      chat_ids.append(chat_id)
+      chat_ids.add(chat_id)
 
 
 # Do not cry sweet little child
@@ -114,6 +114,14 @@ def cry_baby(message):
   chat_id = message.chat.id
   bot.send_message(chat_id, "👶")
   send_audio(chat_id, "cry_baby")
+
+
+# Zase prácééé?
+@bot.message_handler(commands=["zaseprace"])
+def zase_prace(message):
+  chat_id = message.chat.id
+  bot.send_message(chat_id, "Zase prácééé?")
+  send_audio(chat_id, "zase_prace")
 
 
 schedule.every().wednesday.at("10:00",
