@@ -61,10 +61,9 @@ def send_photo(chat_id, image):
 # Function to send a photo message to all chats
 def send_photo_message_to_all():
   print("It's wednesday my dudes! Sending the photo...")
-  photo = get_photo("what_a_week_huh")
   for chat_id in chat_ids:
     print(f"Sending photo to chat ID: {chat_id}")
-    send_photo(chat_id, photo)
+    send_photo(chat_id, "what_a_week_huh")
 
 
 # Function to handle the testing command and send the photo
@@ -124,7 +123,7 @@ def zase_prace(message):
   send_audio(chat_id, "zase_prace")
 
 
-schedule.every().wednesday.at("10:00",
+schedule.every().wednesday.at("11:00",
                               "Europe/Berlin").do(send_photo_message_to_all)
 
 
