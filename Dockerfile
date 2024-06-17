@@ -24,4 +24,4 @@ COPY main.py ./
 
 COPY assets ./assets
 
-ENTRYPOINT ["python", "-m", "what-a-week-huh-bot.main"]
+ENTRYPOINT ["python", "-m", "main.py"]
