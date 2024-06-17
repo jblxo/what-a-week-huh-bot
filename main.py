@@ -8,10 +8,11 @@ from PIL import Image
 
 TOKEN = os.environ['TELEGRAM_BOT_TOKEN']
 bot = telebot.TeleBot(TOKEN)
+assets_folder = "./assets/"
 
-images = {"what_a_week_huh": "what_a_week_huh.jpg", "adam": "adam.jpeg"}
+images = {"what_a_week_huh": f"{assets_folder}what_a_week_huh.jpg", "adam": f"{assets_folder}adam.jpeg"}
 
-sounds = {"cry_baby": "cry_baby.wav", "zase_prace": "zase_prace.wav"}
+sounds = {"cry_baby": f"{assets_folder}cry_baby.wav", "zase_prace": f"{assets_folder}zase_prace.wav"}
 
 chat_ids = set()
 
