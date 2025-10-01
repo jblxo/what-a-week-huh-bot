@@ -172,7 +172,7 @@ def zase_prace(message):
 schedule.every().wednesday.at("11:11",
                               "Europe/Berlin").do(send_photo_message_to_all)
 
-schedule.every().day.at("08:00",
+schedule.every().day.at("08:30",
                         "Europe/Berlin").do(send_first_of_month_video)
 
 
