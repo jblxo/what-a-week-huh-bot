@@ -1,6 +1,7 @@
 import os
 import time
 import threading
+from datetime import datetime
 
 import schedule
 import telebot
@@ -13,6 +14,8 @@ assets_folder = "./assets/"
 images = {"what_a_week_huh": f"{assets_folder}what_a_week_huh.jpg", "adam": f"{assets_folder}adam.jpeg"}
 
 sounds = {"cry_baby": f"{assets_folder}cry_baby.wav", "zase_prace": f"{assets_folder}zase_prace.wav"}
+
+videos = {"wake_up_first_of_month": f"{assets_folder}wake-up-its-the-first-of-the-month.mp4"}
 
 chat_ids = set()
 
@@ -50,6 +53,29 @@ def send_audio(chat_id, audio):
   bot.send_audio(chat_id=chat_id, audio=audio)
 
 
+def get_video(video):
+  path = videos[video]
+
+  if path is None:
+    return None
+
+  with open(path, 'rb') as video_file:
+    files = {
+        'video': video_file.read(),
+    }
+
+  return files['video']
+
+
+def send_video(chat_id, video):
+  video = get_video(video)
+
+  if video is None:
+    return
+
+  bot.send_video(chat_id=chat_id, video=video)
+
+
 def send_photo(chat_id, image):
   photo = get_photo(image)
 
@@ -69,6 +95,21 @@ def send_photo_message_to_all():
   for chat_id in chat_ids:
     print(f"Sending photo to chat ID: {chat_id}")
     send_photo(chat_id, "what_a_week_huh")
+
+
+# Function to send video on first day of month to all chats
+def send_first_of_month_video():
+  if datetime.now().day != 1:
+    return
+    
+  print("It's the first of the month! Sending the wake-up video...")
+  if len(chat_ids) == 0:
+    print("No chats to send the video to.")
+    return
+    
+  for chat_id in chat_ids:
+    print(f"Sending first-of-month video to chat ID: {chat_id}")
+    send_video(chat_id, "wake_up_first_of_month")
 
 
 # Function to handle the testing command and send the photo
@@ -130,6 +171,9 @@ def zase_prace(message):
 
 schedule.every().wednesday.at("11:11",
                               "Europe/Berlin").do(send_photo_message_to_all)
+
+schedule.every().day.at("08:00",
+                        "Europe/Berlin").do(send_first_of_month_video)
 
 
 def polling_thread():
