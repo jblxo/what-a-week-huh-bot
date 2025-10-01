@@ -11,6 +11,10 @@ TOKEN = os.environ['TELEGRAM_BOT_TOKEN']
 bot = telebot.TeleBot(TOKEN)
 assets_folder = "./assets/"
 
+SCHEDULE_TZ = os.getenv('SCHEDULE_TZ', 'Europe/Berlin')
+WEDNESDAY_PHOTO_TIME = os.getenv('WEDNESDAY_PHOTO_TIME', '11:11')
+FIRST_OF_MONTH_VIDEO_TIME = os.getenv('FIRST_OF_MONTH_VIDEO_TIME', '07:00')
+
 images = {"what_a_week_huh": f"{assets_folder}what_a_week_huh.jpg", "adam": f"{assets_folder}adam.jpeg"}
 
 sounds = {"cry_baby": f"{assets_folder}cry_baby.wav", "zase_prace": f"{assets_folder}zase_prace.wav"}
@@ -169,11 +173,11 @@ def zase_prace(message):
   send_audio(chat_id, "zase_prace")
 
 
-schedule.every().wednesday.at("11:11",
-                              "Europe/Berlin").do(send_photo_message_to_all)
+schedule.every().wednesday.at(WEDNESDAY_PHOTO_TIME,
+                              SCHEDULE_TZ).do(send_photo_message_to_all)
 
-schedule.every().day.at("08:30",
-                        "Europe/Berlin").do(send_first_of_month_video)
+schedule.every().day.at(FIRST_OF_MONTH_VIDEO_TIME,
+                        SCHEDULE_TZ).do(send_first_of_month_video)
 
 
 def polling_thread():
